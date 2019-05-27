@@ -1,0 +1,27 @@
+{
+  "name": "lab05",
+  "version": "1.0.0",
+  "description": "## Build a Bitmap Transformer",
+  "main": "index.js",
+  "scripts": {
+    "lint": "eslint **/*.js",
+    "test": "jest --verbose --coverage",
+    "test-watch": "jest --watchAll --verbose --coverage",
+    "build-docs": "jsdoc -r . -d docs/",
+    "view-docs": "live-server docs/"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tia-rose-401-advanced-javascript/lab05.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/tia-rose-401-advanced-javascript/lab05/issues"
+  },
+  "homepage": "https://github.com/tia-rose-401-advanced-javascript/lab05#readme",
+  "dependencies": {
+    "eslint": "^5.16.0",
+    "jest": "^24.8.0"
+  }
+}
