@@ -8,7 +8,8 @@
     "test": "jest --verbose --coverage",
     "test-watch": "jest --watchAll --verbose --coverage",
     "build-docs": "jsdoc -r . -d docs/",
-    "view-docs": "live-server docs/"
+    "view-docs": "live-server docs/",
+    "start": "node index.js"
   },
   "repository": {
     "type": "git",

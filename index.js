@@ -2,6 +2,35 @@
 
 const fs = require('fs');
 
+
+const buffer = fs.readFileSync(`${__dirname}/assets/baldy.bmp`);
+const parsedBitmap = {};
+
+const FILE_TYPE_OFFSET = 0;
+const FILE_SIZE_OFFSET = 2;
+const PIXEL_OFFSET = 10;
+const WIDTH_OFFSET = 18;
+const HEIGHT_OFFSET = 22;
+const BYTES_PER_PIXEL_OFFSET = 28;
+const COLOR_TABLE_OFFSET = 54;
+
+//--------WORKS------//
+
+parsedBitmap.buffer = buffer;
+parsedBitmap.type = buffer.toString('utf-8', FILE_TYPE_OFFSET, 2);
+parsedBitmap.fileSize = buffer.readInt32LE(FILE_SIZE_OFFSET);
+parsedBitmap.pixelOffset = buffer.readInt32LE(PIXEL_OFFSET);
+parsedBitmap.width = buffer.readInt32LE(WIDTH_OFFSET);
+parsedBitmap.height = buffer.readInt32LE(HEIGHT_OFFSET);
+parsedBitmap.bytesPerPixel = buffer.readInt32LE(BYTES_PER_PIXEL_OFFSET);
+parsedBitmap.colorArray = buffer.slice(COLOR_TABLE_OFFSET, this.pixelOffset);
+
+if(!parsedBitmap.colorArray.length){
+  throw 'Invalid .bmp format';
+}
+
+console.log(parsedBitmap);
+
 /**
  * Bitmap -- receives a file name, used in the transformer to note the new buffer
  * @param filePath
@@ -17,8 +46,13 @@ function Bitmap(filePath) {
  */
 Bitmap.prototype.parse = function(buffer) {
   this.buffer = buffer;
-  this.type = buffer.toString('utf-8', 0, 2);
-  //... and so on
+  this.type = buffer.toString('utf-8', FILE_TYPE_OFFSET, 2);
+  this.fileSize = buffer.readInt32LE(FILE_SIZE_OFFSET);
+  this.pixelOffset = buffer.readInt32LE(PIXEL_OFFSET);
+  this.width = buffer.readInt32LE(WIDTH_OFFSET);
+  this.height = buffer.readInt32LE(HEIGHT_OFFSET);
+  this.bytesPerPixel = buffer.readInt32LE(BYTES_PER_PIXEL_OFFSET);
+  this.colorArray = buffer.slice(COLOR_TABLE_OFFSET, this.pixelOffset);
 };
 
 /**
@@ -41,23 +75,29 @@ const transformGreyscale = (bmp) => {
 
   console.log('Transforming bitmap into greyscale', bmp);
 
-  //TODO: Figure out a way to validate that the bmp instance is actually valid before trying to transform it
 
-  //TODO: alter bmp to make the image greyscale ...
-
+  if(!parsedBitmap.colorArray.length){
+    throw 'Invalid .bmp format';
+  }
 };
+
+console.log(parsedBitmap);
+//   //TODO: Figure out a way to validate that the bmp instance is actually valid before trying to transform it
+
+//   //TODO: alter bmp to make the image greyscale ...
+
 
 const doTheInversion = (bmp) => {
   bmp = {};
-}
+};
 
-/**
- * A dictionary of transformations
- * Each property represents a transformation that someone could enter on the command line and then a function that would be called on the bitmap to do this job
- */
+// /**
+//  * A dictionary of transformations
+//  * Each property represents a transformation that someone could enter on the command line and then a function that would be called on the bitmap to do this job
+//  */
 const transforms = {
   greyscale: transformGreyscale,
-  invert: doTheInversion
+  invert: doTheInversion,
 };
 
 // ------------------ GET TO WORK ------------------- //
@@ -92,4 +132,3 @@ const [file, operation] = process.argv.slice(2);
 let bitmap = new Bitmap(file);
 
 transformWithCallbacks();
-
