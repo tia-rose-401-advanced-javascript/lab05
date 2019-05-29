@@ -14,7 +14,7 @@ const HEIGHT_OFFSET = 22;
 const BYTES_PER_PIXEL_OFFSET = 28;
 const COLOR_TABLE_OFFSET = 54;
 
-//--------WORKS------//
+// //--------WORKS------//
 
 parsedBitmap.buffer = buffer;
 parsedBitmap.type = buffer.toString('utf-8', FILE_TYPE_OFFSET, 2);
@@ -29,116 +29,159 @@ if(!parsedBitmap.colorArray.length){
   throw 'Invalid .bmp format';
 }
 
-console.log(parsedBitmap);
-
-/**
- * Bitmap -- receives a file name, used in the transformer to note the new buffer
- * @param filePath
- * @constructor
- */
-function Bitmap(filePath) {
-  this.file = filePath;
+function greyscale(bmp){
+  for(let i = 0; i < bmp.colorArray.length; i += 4){
+    let grey = (bmp.colorArray[i] + bmp.colorArray[i+1] + bmp.colorArray[i+2]);
+    bmp.colorArray[i] = grey;
+    bmp.colorArray[i+1] = grey;
+    bmp.colorArray[i+2] = grey;
+    console.log(bmp.colorArray);
+  }
 }
 
-/**
- * Parser -- accepts a buffer and will parse through it, according to the specification, creating object properties for each segment of the file
- * @param buffer
- */
-Bitmap.prototype.parse = function(buffer) {
-  this.buffer = buffer;
-  this.type = buffer.toString('utf-8', FILE_TYPE_OFFSET, 2);
-  this.fileSize = buffer.readInt32LE(FILE_SIZE_OFFSET);
-  this.pixelOffset = buffer.readInt32LE(PIXEL_OFFSET);
-  this.width = buffer.readInt32LE(WIDTH_OFFSET);
-  this.height = buffer.readInt32LE(HEIGHT_OFFSET);
-  this.bytesPerPixel = buffer.readInt32LE(BYTES_PER_PIXEL_OFFSET);
-  this.colorArray = buffer.slice(COLOR_TABLE_OFFSET, this.pixelOffset);
-};
-
-/**
- * Transform a bitmap using some set of rules. The operation points to some function, which will operate on a bitmap instance
- * @param operation
- */
-Bitmap.prototype.transform = function(operation) {
-  // This is really assumptive and unsafe
-  transforms[operation](this);
-  this.newFile = this.file.replace(/\.bmp/, `.${operation}.bmp`);
-};
-
-/**
- * Sample Transformer (greyscale)
- * Would be called by Bitmap.transform('greyscale')
- * Pro Tip: Use "pass by reference" to alter the bitmap's buffer in place so you don't have to pass it around ...
- * @param bmp
- */
-const transformGreyscale = (bmp) => {
-
-  console.log('Transforming bitmap into greyscale', bmp);
-
-  //TODO: Figure out a way to validate that the bmp instance is actually valid before trying to transform it
-
-  if(!parsedBitmap.colorArray.length){
-    throw 'Invalid .bmp format';
-  }else{
-
-    //   //TODO: alter bmp to make the image greyscale ...
-
-    for(let i = 0; i < bmp.colorArray.length; i += 4){
-      let grey = (bmp.colorArray[i] + bmp.colorArray[i+1] + bmp.colorArray[i+2]);
-      bmp.colorArray[i] = grey;
-      bmp.colorArray[i+1] = grey;
-      bmp.colorArray[i+2] = grey;
-      console.log(bmp.colorArray);
-    }
-  }
-};
-
-// transformGreyscale('./assets/baldy.greyscale.bmp');
+console.log(parsedBitmap);
+greyscale(parsedBitmap);
+fs.write('assets/baldy.greyscale.bmp', parsedBitmap.buffer, (error) => {
+  if(error) throw error;
+  console.log('Working');
+});
 
 
 
-const doTheInversion = (bmp) => {
-  bmp = {};
-};
+
+//-----Trying to get to work-------//
 
 // /**
-//  * A dictionary of transformations
-//  * Each property represents a transformation that someone could enter on the command line and then a function that would be called on the bitmap to do this job
+//  * Bitmap -- receives a file name, used in the transformer to note the new buffer
+//  * @param filePath
+//  * @constructor
 //  */
-const transforms = {
-  greyscale: transformGreyscale,
-  invert: doTheInversion,
-};
+// function Bitmap(filePath) {
+//   this.file = filePath;
+// }
 
-// ------------------ GET TO WORK ------------------- //
+// /**
+//  * Parser -- accepts a buffer and will parse through it, according to the specification, creating object properties for each segment of the file
+//  * @param buffer
+//  */
 
-function transformWithCallbacks() {
 
-  fs.readFile(file, (err, buffer) => {
 
-    if (err) {
-      throw err;
-    }
+// Bitmap.prototype.parse = function(buffer) {
+//   this.buffer = buffer;
+//   this.type = buffer.toString('utf-8', FILE_TYPE_OFFSET, 2);
+//   this.fileSize = buffer.readInt32LE(FILE_SIZE_OFFSET);
+//   this.pixelOffset = buffer.readInt32LE(PIXEL_OFFSET);
+//   this.width = buffer.readInt32LE(WIDTH_OFFSET);
+//   this.height = buffer.readInt32LE(HEIGHT_OFFSET);
+//   this.bytesPerPixel = buffer.readInt32LE(BYTES_PER_PIXEL_OFFSET);
+//   this.colorArray = buffer.slice(COLOR_TABLE_OFFSET, this.pixelOffset);
+// };
 
-    bitmap.parse(buffer);
+// /**
+//  * Transform a bitmap using some set of rules. The operation points to some function, which will operate on a bitmap instance
+//  * @param operation
+//  */
+// Bitmap.prototype.transform = function(operation) {
+//   // This is really assumptive and unsafe
+//   transforms[operation](this);
+//   this.newFile = this.file.replace(/\.bmp/, `.${operation}.bmp`);
+// };
 
-    bitmap.transform(operation);
+// /**
+//  * Sample Transformer (greyscale)
+//  * Would be called by Bitmap.transform('greyscale')
+//  * Pro Tip: Use "pass by reference" to alter the bitmap's buffer in place so you don't have to pass it around ...
+//  * @param bmp
+//  */
+// const transformGreyscale = (bmp) => {
 
-    // Note that this has to be nested!
-    // Also, it uses the bitmap's instance properties for the name and thew new buffer
-    fs.writeFile(bitmap.newFile, bitmap.buffer, (err, out) => {
-      if (err) {
-        throw err;
-      }
-      console.log(`Bitmap Transformed: ${bitmap.newFile}`);
-    });
+//   console.log('Transforming bitmap into greyscale', bmp);
 
-  });
-}
+//   //TODO: Figure out a way to validate that the bmp instance is actually valid before trying to transform it
 
-// TODO: Explain how this works (in your README)
-const [file, operation] = process.argv.slice(2);
+//   if(!parsedBitmap.colorArray.length){
+//     throw 'Invalid .bmp format';
+//   }else{
 
-let bitmap = new Bitmap(file);
+//     //   //TODO: alter bmp to make the image greyscale ...
 
-transformWithCallbacks();
+//     for(let i = 0; i < bmp.colorArray.length; i += 4){
+//       let grey = (bmp.colorArray[i] + bmp.colorArray[i+1] + bmp.colorArray[i+2]);
+//       bmp.colorArray[i] = grey;
+//       bmp.colorArray[i+1] = grey;
+//       bmp.colorArray[i+2] = grey;
+//       console.log(bmp.colorArray);
+//     }
+//   }
+// };
+
+// // transformGreyscale(parsedBitmap);
+// // fs.write('./assets/baldy.greyscale.bmp', parsedBitmap.buffer, (error) => {
+// //   if(error) throw error;
+// //   console.log('Working');
+// // });
+
+
+
+// const doTheInversion = (bmp) => {
+//   // bmp = {};
+//   console.log('In the Inversion function');
+//   if(!parsedBitmap.colorArray.length){
+//     throw 'Invalid .bmp format';
+//   }else{
+//     for(let i = 0; i < bmp.colorArray.length; i +=4){
+//       if(bmp.colorArray[i] > 130){
+//         bmp.colorArray[i] -= 150;
+//         bmp.colorArray[i+1] -= 150;
+//         bmp.colorArray[i+2] -= 150;
+//       }else{
+//         bmp.colorArray[i] += 150;
+//         bmp.colorArray[i+1] += 150;
+//         bmp.colorArray[i+2] += 150;
+//       }
+//     }
+//   }
+// };
+
+// // /**
+// //  * A dictionary of transformations
+// //  * Each property represents a transformation that someone could enter on the command line and then a function that would be called on the bitmap to do this job
+// //  */
+// const transforms = {
+//   greyscale: transformGreyscale,
+//   invert: doTheInversion,
+// };
+
+// // ------------------ GET TO WORK ------------------- //
+
+// function transformWithCallbacks() {
+
+//   fs.readFile(file, (err, buffer) => {
+//     console.log(file);
+//     if (err) {
+//       throw err;
+//     }
+
+//     bitmap.parse(buffer);
+
+//     bitmap.transform(operation);
+
+//     // Note that this has to be nested!
+//     // Also, it uses the bitmap's instance properties for the name and thew new buffer
+//     fs.writeFile(bitmap.newFile, bitmap.buffer, (err, out) => {
+//       if (err) {
+//         throw err;
+//       }
+//       console.log(`Bitmap Transformed: ${bitmap.newFile}`);
+//     });
+
+//   });
+// }
+
+// // TODO: Explain how this works (in your README)
+// const [file, operation] = process.argv.slice(2);
+
+// let bitmap = new Bitmap(file);
+
+// transformWithCallbacks();
