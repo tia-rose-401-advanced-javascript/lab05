@@ -31,7 +31,7 @@ if(!parsedBitmap.colorArray.length){
 
 function greyscale(bmp){
   for(let i = 0; i < bmp.colorArray.length; i += 4){
-    let grey = (bmp.colorArray[i] + bmp.colorArray[i+1] + bmp.colorArray[i+2]);
+    let grey = (bmp.colorArray[i] + bmp.colorArray[i+1] + bmp.colorArray[i+2]) / 3;
     bmp.colorArray[i] = grey;
     bmp.colorArray[i+1] = grey;
     bmp.colorArray[i+2] = grey;
@@ -39,11 +39,12 @@ function greyscale(bmp){
   }
 }
 
-console.log(parsedBitmap);
+
 greyscale(parsedBitmap);
-fs.write('assets/baldy.greyscale.bmp', parsedBitmap.buffer, (error) => {
-  if(error) throw error;
-  console.log('Working');
+
+fs.writeFile('assets/baldy.greyscale.bmp', parsedBitmap.buffer, (err) => {
+  if(err) throw err;
+  console.log('success!');
 });
 
 
