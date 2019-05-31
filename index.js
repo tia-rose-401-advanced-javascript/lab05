@@ -107,13 +107,13 @@ fs.writeFile('assets/baldy.greyscale.bmp', parsedBitmap.buffer, (err) => {
 
 //     //   //TODO: alter bmp to make the image greyscale ...
 
-//     for(let i = 0; i < bmp.colorArray.length; i += 4){
-//       let grey = (bmp.colorArray[i] + bmp.colorArray[i+1] + bmp.colorArray[i+2]);
-//       bmp.colorArray[i] = grey;
-//       bmp.colorArray[i+1] = grey;
-//       bmp.colorArray[i+2] = grey;
-//       console.log(bmp.colorArray);
-//     }
+//   for(let i = 0; i < bmp.colorArray.length; i += 4){
+//   let grey = (bmp.colorArray[i] + bmp.colorArray[i+1] + bmp.colorArray[i+2]) / 3;
+//   bmp.colorArray[i] = grey;
+//   bmp.colorArray[i+1] = grey;
+//   bmp.colorArray[i+2] = grey;
+//   console.log(bmp.colorArray);
+// }
 //   }
 // };
 
