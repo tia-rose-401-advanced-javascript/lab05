@@ -36,24 +36,27 @@ function greyscale(bmp){
     bmp.colorArray[i+1] = grey;
     bmp.colorArray[i+2] = grey;
   }
+  fs.writeFile('assets/baldy.greyscale.bmp', parsedBitmap.buffer, (err) => {
+    if(err) throw err;
+    console.log('success!');
+  });
 }
 
-// function randomscale(bmp){
-//   for(let i =0; i < bmp.colorArray.length; i+= 4){
-//     bmp.colorArray[i] = (bmp.colorArray[i] + bmp.colorArray[i+1] + bmp.colorArray[i+2]) / 3;
-//     bmp.colorArray[i+1] = (bmp.colorArray[i] + bmp.colorArray[i+1] + bmp.colorArray[i+2]) / 16;
-//     bmp.colorArray[i+2] = (bmp.colorArray[i] + bmp.colorArray[i+1] + bmp.colorArray[i+2]) / 13;
-//   }
-// }
+function theInversion(bmp){
+  for(let i =0; i < bmp.colorArray.length; i+= 4){
+    bmp.colorArray[i] = bmp.colorArray[i] ^ 100;
+    bmp.colorArray[i+1] = bmp.colorArray[i+1] ^ 200;
+    bmp.colorArray[i+2] = bmp.colorArray[i+2] ^ 150;
+  }
+  fs.writeFile('assets/24bit.inversion.bmp', parsedBitmap.buffer, (err) => {
+    if(err) throw err;
+    console.log('success!');
+  });
+}
 
-// randomscale(parsedBitmap);
-greyscale(parsedBitmap);
+theInversion(parsedBitmap);
+// greyscale(parsedBitmap);
 
-
-fs.writeFile('assets/baldy.greyscale.bmp', parsedBitmap.buffer, (err) => {
-  if(err) throw err;
-  console.log('success!');
-});
 
 
 
