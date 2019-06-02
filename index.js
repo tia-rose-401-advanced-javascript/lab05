@@ -55,10 +55,7 @@ function theInversion(bmp){
 }
 
 theInversion(parsedBitmap);
-// greyscale(parsedBitmap);
-
-
-
+greyscale(parsedBitmap);
 
 
 // // -----Trying to get to work-------//
@@ -107,14 +104,14 @@ theInversion(parsedBitmap);
 //  * @param bmp
 //  */
 
-// console.log(this.colorArray);
+
 // const transformGreyscale = (bmp) => {
 
 //   console.log('Transforming bitmap into greyscale', bmp);
 
 //   //TODO: Figure out a way to validate that the bmp instance is actually valid before trying to transform it
 
-//   console.log(bmp.colorArray);
+  
 //   if(!bmp.colorArray.length){
 //     throw 'Invalid .bmp format';
 //   }else{
@@ -126,26 +123,25 @@ theInversion(parsedBitmap);
 //       bmp.colorArray[i] = grey;
 //       bmp.colorArray[i+1] = grey;
 //       bmp.colorArray[i+2] = grey;
-//       console.log(bmp.colorArray);
 //     }
 //   }
 // };
 
 
 
-// // const doTheInversion = (bmp) => {
-// //   // bmp = {};
-// //   console.log('In the Inversion function');
-// //   if(!parsedBitmap.colorArray.length){
-// //     throw 'Invalid .bmp format';
-// //   }else{
-// //     for(let i = 0; i < bmp.colorArray.length; i +=4){
-// //       bmp.colorArray[i] *= color.colorArray[i];
-// //       bmp.colorArray[i+1] *= color.colorArray[i+1];
-// //       bmp.colorArray[i+2] *= color.colorArray[i+2];
-// //     }
-// //   }
-// // };
+// const doTheInversion = (bmp) => {
+//   // bmp = {};
+//   console.log('In the Inversion function');
+//   if(!bmp.colorArray.length){
+//     throw 'Invalid .bmp format';
+//   }else{
+//     for(let i =0; i < bmp.colorArray.length; i+= 4){
+//       bmp.colorArray[i] = bmp.colorArray[i] ^ 100;
+//       bmp.colorArray[i+1] = bmp.colorArray[i+1] ^ 200;
+//       bmp.colorArray[i+2] = bmp.colorArray[i+2] ^ 150;
+//     }
+//   }
+// };
 
 // // /**
 // //  * A dictionary of transformations
@@ -153,46 +149,39 @@ theInversion(parsedBitmap);
 // //  */
 // const transforms = {
 //   greyscale: transformGreyscale,
-//   // invert: doTheInversion,
+//   invert: doTheInversion,
 // };
 
 // // // ------------------ GET TO WORK ------------------- //
 
-// // function transformWithCallbacks() {
+// function transformWithCallbacks() {
 
-// //   fs.readFile(file, (err, buffer) => {
-// //     console.log(file);
-// //     if (err) {
-// //       throw err;
-// //     }
+//   fs.readFile(file, (err, buffer) => {
 
-// //     bitmap.parse(buffer);
+//     if (err) {
+//       throw err;
+//     }
 
-// //     bitmap.transform(operation);
+//     bitmap.parse(buffer);
 
-// //     // Note that this has to be nested!
-// //     // Also, it uses the bitmap's instance properties for the name and thew new buffer
-// //     fs.writeFile(bitmap.newFile, bitmap.buffer, (err, out) => {
-// //       if (err) {
-// //         throw err;
-// //       }
-// //       console.log(`Bitmap Transformed: ${bitmap.newFile}`);
-// //     });
+//     bitmap.transform(operation);
 
-// //   });
-// // }
+//     // Note that this has to be nested!
+//     // Also, it uses the bitmap's instance properties for the name and thew new buffer
+//     fs.writeFile(bitmap.newFile, bitmap.buffer, (err, out) => {
+//       if (err) {
+//         throw err;
+//       }
+//       console.log(`Bitmap Transformed: ${bitmap.newFile}`);
+//     });
 
-// // // TODO: Explain how this works (in your README)
-// // const [file, operation] = process.argv.slice(2);
+//   });
+// }
 
-// // let bitmap = new Bitmap(file);
+// // TODO: Explain how this works (in your README)
+// const [file, operation] = process.argv.slice(2);
 
-// // // transformWithCallbacks();
+// let bitmap = new Bitmap(file);
 
-// transformGreyscale(parsedBitmap);
+// transformWithCallbacks(operation);
 
-
-// fs.writeFile('assets/baldy.greyscale.bmp', parsedBitmap.buffer, (err) => {
-//   if(err) throw err;
-//   console.log('success!');
-// });
