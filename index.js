@@ -48,6 +48,7 @@ Bitmap.prototype.transform = function(operation) {
   this.newFile = this.file.replace(/\.bmp/, `.${operation}.bmp`);
 };
 
+//Still needs work but not necessary for lab
 const pixelate = (bmp) => {
   // bmp = {};
   console.log('In the Pixel function');
