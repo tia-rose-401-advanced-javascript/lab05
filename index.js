@@ -2,6 +2,7 @@
 
 const fs = require('fs');
 const greyscale = require('./lib/greyscale');
+const inversion = require('./lib/inversion');
 
 const FILE_TYPE_OFFSET = 0;
 const FILE_SIZE_OFFSET = 2;
@@ -47,28 +48,6 @@ Bitmap.prototype.transform = function(operation) {
   this.newFile = this.file.replace(/\.bmp/, `.${operation}.bmp`);
 };
 
-/**
- * Sample Transformer (greyscale)
- * Would be called by Bitmap.transform('greyscale')
- * Pro Tip: Use "pass by reference" to alter the bitmap's buffer in place so you don't have to pass it around ...
- * @param bmp
- */
-
-const doTheInversion = (bmp) => {
-  // bmp = {};
-  console.log('In the Inversion function');
-  if(!bmp.colorArray.length){
-    throw 'Invalid .bmp format';
-  }else{
-    
-    for(let i =0; i < bmp.colorArray.length; i+= 4){
-      bmp.colorArray[i] = (bmp.colorArray[i] - 0);
-      bmp.colorArray[i+1] = (bmp.colorArray[i+1] - 128);
-      bmp.colorArray[i+2] = (bmp.colorArray[i+2] - 255); 
-    }
-  }
-};
-
 const pixelate = (bmp) => {
   // bmp = {};
   console.log('In the Pixel function');
@@ -89,7 +68,7 @@ const pixelate = (bmp) => {
 //  */
 const transforms = {
   greyscale: greyscale,
-  invert: doTheInversion,
+  invert: inversion,
   pixel: pixelate,
 };
 
