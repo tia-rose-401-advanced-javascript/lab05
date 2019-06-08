@@ -9,8 +9,8 @@
     "test-watch": "jest --watchAll --verbose --coverage",
     "build-docs": "jsdoc -r . -d docs/",
     "view-docs": "live-server docs/",
-    "start": "node index.js ./assets/baldy.bmp greyscale",
-    "start-inver": "node index.js ./assets/24bit.bmp inversion"
+    "start": "node index.js ./assets/24bit.bmp invert",
+    "start-grey": "node index.js ./assets/24bit.bmp greyscale"
   },
   "repository": {
     "type": "git",

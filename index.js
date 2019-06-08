@@ -3,8 +3,8 @@
 const fs = require('fs');
 
 
-const buffer = fs.readFileSync(`${__dirname}/assets/baldy.bmp`);
-const parsedBitmap = {};
+// const buffer = fs.readFileSync(`${__dirname}/assets/baldy.bmp`);
+// const parsedBitmap = {};
 
 const FILE_TYPE_OFFSET = 0;
 const FILE_SIZE_OFFSET = 2;
@@ -135,10 +135,11 @@ const doTheInversion = (bmp) => {
   if(!bmp.colorArray.length){
     throw 'Invalid .bmp format';
   }else{
+    
     for(let i =0; i < bmp.colorArray.length; i+= 4){
-      bmp.colorArray[i] = bmp.colorArray[i] ^ 100;
-      bmp.colorArray[i+1] = bmp.colorArray[i+1] ^ 200;
-      bmp.colorArray[i+2] = bmp.colorArray[i+2] ^ 150;
+      bmp.colorArray[i] = (bmp.colorArray[i] - 0);
+      bmp.colorArray[i+1] = (bmp.colorArray[i+1] - 128);
+      bmp.colorArray[i+2] = (bmp.colorArray[i+2] - 255); 
     }
   }
 };
