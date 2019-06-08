@@ -8,7 +8,10 @@
     "test": "jest --verbose --coverage",
     "test-watch": "jest --watchAll --verbose --coverage",
     "build-docs": "jsdoc -r . -d docs/",
-    "view-docs": "live-server docs/"
+    "view-docs": "live-server docs/",
+    "start": "node index.js ./assets/baldy.inversion.bmp invert",
+    "start-grey": "node index.js ./assets/baldy.bmp greyscale",
+    "start-pixel": "node index.js ./assets/baldy.bmp pixelate"
   },
   "repository": {
     "type": "git",
