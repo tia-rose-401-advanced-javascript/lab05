@@ -1,10 +1,7 @@
 'use strict';
 
 const fs = require('fs');
-
-
-// const buffer = fs.readFileSync(`${__dirname}/assets/baldy.bmp`);
-// const parsedBitmap = {};
+const greyscale = require('./lib/greyscale');
 
 const FILE_TYPE_OFFSET = 0;
 const FILE_SIZE_OFFSET = 2;
@@ -13,52 +10,6 @@ const WIDTH_OFFSET = 18;
 const HEIGHT_OFFSET = 22;
 const BYTES_PER_PIXEL_OFFSET = 28;
 const COLOR_TABLE_OFFSET = 54;
-
-// // //--------WORKS------//
-
-// parsedBitmap.buffer = buffer;
-// parsedBitmap.type = buffer.toString('utf-8', FILE_TYPE_OFFSET, 2);
-// parsedBitmap.fileSize = buffer.readInt32LE(FILE_SIZE_OFFSET);
-// parsedBitmap.pixelOffset = buffer.readInt32LE(PIXEL_OFFSET);
-// parsedBitmap.width = buffer.readInt32LE(WIDTH_OFFSET);
-// parsedBitmap.height = buffer.readInt32LE(HEIGHT_OFFSET);
-// parsedBitmap.bytesPerPixel = buffer.readInt32LE(BYTES_PER_PIXEL_OFFSET);
-// parsedBitmap.colorArray = buffer.slice(COLOR_TABLE_OFFSET, this.pixelOffset);
-
-// if(!parsedBitmap.colorArray.length){
-//   throw 'Invalid .bmp format';
-// }
-
-// function greyscale(bmp){
-//   for(let i = 0; i < bmp.colorArray.length; i += 4){
-//     let grey = (bmp.colorArray[i] + bmp.colorArray[i+1] + bmp.colorArray[i+2]) / 3;
-//     bmp.colorArray[i] = grey;
-//     bmp.colorArray[i+1] = grey;
-//     bmp.colorArray[i+2] = grey;
-//   }
-//   fs.writeFile('assets/baldy.greyscale.bmp', parsedBitmap.buffer, (err) => {
-//     if(err) throw err;
-//     console.log('success!');
-//   });
-// }
-
-// function theInversion(bmp){
-//   for(let i =0; i < bmp.colorArray.length; i+= 4){
-//     bmp.colorArray[i] = bmp.colorArray[i] ^ 100;
-//     bmp.colorArray[i+1] = bmp.colorArray[i+1] ^ 200;
-//     bmp.colorArray[i+2] = bmp.colorArray[i+2] ^ 150;
-//   }
-//   fs.writeFile('assets/24bit.inversion.bmp', parsedBitmap.buffer, (err) => {
-//     if(err) throw err;
-//     console.log('success!');
-//   });
-// }
-
-// theInversion(parsedBitmap);
-// greyscale(parsedBitmap);
-
-
-// -----Trying to get to work-------//
 
 /**
  * Bitmap -- receives a file name, used in the transformer to note the new buffer
@@ -74,8 +25,6 @@ function Bitmap(filePath) {
  * @param buffer
  */
 
-
-
 Bitmap.prototype.parse = function(buffer) {
   this.buffer = buffer;
   this.type = buffer.toString('utf-8', FILE_TYPE_OFFSET, 2);
@@ -85,6 +34,7 @@ Bitmap.prototype.parse = function(buffer) {
   this.height = buffer.readInt32LE(HEIGHT_OFFSET);
   this.bytesPerPixel = buffer.readInt32LE(BYTES_PER_PIXEL_OFFSET);
   this.colorArray = buffer.slice(COLOR_TABLE_OFFSET, this.pixelOffset);
+  this.pixelArray = buffer.slice(this.pixelOffset);
 };
 
 /**
@@ -104,31 +54,6 @@ Bitmap.prototype.transform = function(operation) {
  * @param bmp
  */
 
-
-const transformGreyscale = (bmp) => {
-
-  console.log('Transforming bitmap into greyscale', bmp);
-
-  //TODO: Figure out a way to validate that the bmp instance is actually valid before trying to transform it
-
-  
-  if(!bmp.colorArray.length){
-    throw 'Invalid .bmp format';
-  }else{
-
-    //   //TODO: alter bmp to make the image greyscale ...
-
-    for(let i = 0; i < bmp.colorArray.length; i += 4){
-      let grey = (bmp.colorArray[i] + bmp.colorArray[i+1] + bmp.colorArray[i+2]) / 3;
-      bmp.colorArray[i] = grey;
-      bmp.colorArray[i+1] = grey;
-      bmp.colorArray[i+2] = grey;
-    }
-  }
-};
-
-
-
 const doTheInversion = (bmp) => {
   // bmp = {};
   console.log('In the Inversion function');
@@ -144,17 +69,31 @@ const doTheInversion = (bmp) => {
   }
 };
 
+const pixelate = (bmp) => {
+  // bmp = {};
+  console.log('In the Pixel function');
+  if(!bmp.pixelArray.length){
+    throw 'Invalid .bmp format';
+  }else{
+    
+    for(let i =0; i < bmp.pixelArray.length; i+= 4){
+      let random = Math.floor((Math.random()*4)+1);
+      bmp.pixelArray[i+random] = null;
+    }
+  }
+};
+
 // /**
 //  * A dictionary of transformations
 //  * Each property represents a transformation that someone could enter on the command line and then a function that would be called on the bitmap to do this job
 //  */
 const transforms = {
-  greyscale: transformGreyscale,
+  greyscale: greyscale,
   invert: doTheInversion,
+  pixel: pixelate,
 };
 
-// // ------------------ GET TO WORK ------------------- //
-
+// ------------------ GET TO WORK ------------------- //
 function transformWithCallbacks() {
 
   fs.readFile(file, (err, buffer) => {
